@@ -135,7 +135,9 @@ class AppNav extends HTMLElement {
             if (item.type === 'divider') {
                 return '<div style="height: 1px; background: var(--app-300); margin: 0.5rem 0;"></div>';
             }
-            return `<eui-nav-item path="${item.path}" icon="${item.icon}" label="${item.label}"></eui-nav-item>`;
+            const avatarSrc = item.avatar?.src || '';
+            const avatarName = item.avatar?.name || '';
+            return `<eui-nav-item path="${item.path}" icon="${item.icon}" avatar-src="${avatarSrc}" avatar-name="${avatarName}" label="${item.label}"></eui-nav-item>`;
         }).join('')}
             </div>
         </div>

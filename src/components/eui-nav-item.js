@@ -1,8 +1,9 @@
 import { router } from "../scripts/router.js";
+import "./eui-avatar.js";
 
 class NavItem extends HTMLElement {
     static get observedAttributes() {
-        return ["path", "icon", "label", "badge", "active"];
+        return ["path", "icon", "label", "badge", "active", "avatar-src", "avatar-name"];
     }
 
     constructor() {
@@ -66,6 +67,8 @@ class NavItem extends HTMLElement {
 
     updateContent() {
         const icon = this.getAttribute("icon");
+        const avatarSrc = this.getAttribute("avatar-src");
+        const avatarName = this.getAttribute("avatar-name");
         const label = this.getAttribute("label") || "";
         const badge = this.getAttribute("badge");
 
@@ -85,15 +88,24 @@ class NavItem extends HTMLElement {
 
         const iconSlot = this.shadowRoot.querySelector("slot[name='icon']");
         if (iconSlot) {
-            const currentIcon = iconSlot.querySelector("eui-icon");
-            if (icon && currentIcon) {
-                if (currentIcon.getAttribute("name") !== icon) {
-                    currentIcon.setAttribute("name", icon);
-                }
-            } else if (icon) {
-                iconSlot.innerHTML = `<eui-icon width="24" height="24" name="${icon}"></eui-icon>`;
+            if (avatarSrc || avatarName) {
+                let content = `<eui-avatar size="24"`;
+                if (avatarName) content += ` name="${avatarName}"`;
+                content += `>`;
+                if (avatarSrc) content += `<img src="${avatarSrc}" alt="${avatarName || 'Avatar'}" />`;
+                content += `</eui-avatar>`;
+                iconSlot.innerHTML = content;
             } else {
-                iconSlot.innerHTML = '';
+                const currentIcon = iconSlot.querySelector("eui-icon");
+                if (icon && currentIcon) {
+                    if (currentIcon.getAttribute("name") !== icon) {
+                        currentIcon.setAttribute("name", icon);
+                    }
+                } else if (icon) {
+                    iconSlot.innerHTML = `<eui-icon width="24" height="24" name="${icon}"></eui-icon>`;
+                } else {
+                    iconSlot.innerHTML = '';
+                }
             }
         }
 
